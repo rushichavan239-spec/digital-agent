@@ -71,12 +71,12 @@ def fetch_leads(query, location):
                     "Custom AI Pitch": pitch
                 })
     except Exception as e:
-        st.error(f"Error: {e}")
+        pass
     return leads_list
 
 # --- ३. युझर इंटरफेस ---
 st.markdown('<div class="premium-header">RC DIGITAL</div>', unsafe_allow_html=True)
-st.markdown('<div class="premium-subheader">Autonomous Marketing & Distribution Engine</div>', unsafe_allowed_html=False)
+st.markdown('<div class="premium-subheader">Autonomous Marketing & Distribution Engine</div>', unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
 with col1:
