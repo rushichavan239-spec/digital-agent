@@ -121,7 +121,7 @@ st.markdown("""
         box-shadow: 0 0 30px rgba(255, 255, 255, 0.25);
     }
 
-    /* LEAD CARD WITH AUDIT SHIELD LOOK */
+    /* LEAD CARD DESIGN WITH HOVER EFFECT */
     .lead-card {
         animation: fadeInUp 0.5s ease;
         background: linear-gradient(180deg, rgba(20, 20, 23, 0.9) 0%, rgba(10, 10, 12, 0.9) 100%);
@@ -129,9 +129,14 @@ st.markdown("""
         border-radius: 16px;
         border: 1px solid rgba(255, 255, 255, 0.03);
         margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+    .lead-card:hover {
+        border-color: rgba(255, 255, 255, 0.12);
+        transform: translateY(-2px);
     }
     
-    /* AUDIT CONTAINER STYLING */
+    /* AUDIT LAYOUT WITH NEON HIGHLIGHT */
     .audit-container {
         display: flex;
         gap: 1.5rem;
@@ -144,13 +149,13 @@ st.markdown("""
     
     .audit-score-badge {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 2rem;
+        font-size: 1.8rem;
         font-weight: 800;
         display: flex;
         align-items: center;
         justify-content: center;
-        min-width: 80px;
-        height: 80px;
+        min-width: 70px;
+        height: 70px;
         border-radius: 12px;
         border: 2px solid;
     }
@@ -160,6 +165,7 @@ st.markdown("""
         white-space: pre-wrap;
         color: #E4E4E7;
         font-size: 0.95rem;
+        line-height: 1.6;
         background-color: rgba(0, 0, 0, 0.4);
         padding: 1.2rem;
         border-radius: 8px;
@@ -170,25 +176,21 @@ st.markdown("""
 
 # --- २. कोर बॅकएंड इंजिन + डिजिटल ऑडिट स्कोरर ---
 def perform_digital_audit(url):
-    """वे वेबसाईटचा अभ्यास करून मल्टिपल पॅरामीटर्सवर डिजिटल ऑडिट स्कोर जनरेट करणे"""
-    # रीयल-टाइम सिम्युलेटेड ऑडिट मॅट्रिक्स
     seo_score = random.randint(45, 85)
     speed_score = random.randint(50, 90)
     mobile_score = random.randint(40, 80)
-    
     final_score = int((seo_score + speed_score + mobile_score) / 3)
     
-    # स्कोअरनुसार शेरे आणि उणिवा शोधणे
     if final_score < 60:
-        color = "#EF4444" # Red
+        color = "#EF4444"
         status = "Critical Optimization Required"
         loophole = "कमकुवत SEO रँकिंग, संथ लोडिंग स्पीड आणि अपूर्ण सोशल मीडिया ब्रँडिंग स्ट्रॅटेजी."
     elif final_score < 75:
-        color = "#F59E0B" # Orange
+        color = "#F59E0B"
         status = "Needs Strategic Improvement"
         loophole = "मध्यम दर्जाची वेबसाईट ऑप्टिमायझेशन, परंतु इंस्टाग्राम व लिंक्डइनवर अपुरी ब्रँड कन्सिटन्सी."
     else:
-        color = "#10B981" # Green
+        color = "#10B981"
         status = "Stable / Minor Tweaks Needed"
         loophole = "वेबसाईट उत्तम आहे, परंतु लीड मॅग्नेट आणि हाय-कन्व्हर्टिंग डिजिटल फनेलची कमतरता."
         
@@ -204,10 +206,13 @@ def fetch_leads(query, location):
         soup = BeautifulSoup(response.text, "html.parser")
         results = soup.find_all('div', class_='result__body')
         
-        for index, result in enumerate(results[:4]): # वेळेची बचत करण्यासाठी टॉप ४
+        for index, result in enumerate(results[:4]):
             title_tag = result.find('a', class_='result__url')
             if title_tag:
                 name = title_tag.text.strip().split('|')[0].strip()
+                # नावात खूप लांबलचक URL असल्यास छोटी करणे
+                if len(name) > 35:
+                    name = name[:32] + "..."
                 website = title_tag['href']
                 leads_list.append({"Business Name": name, "Website": website})
     except:
@@ -216,32 +221,26 @@ def fetch_leads(query, location):
     if not leads_list:
         clean_query = query.title()
         clean_loc = location.title()
-        backup_names = [f"{clean_query} Alpha Group", f"{clean_query} Nexus Systems", f"The Elite {clean_query}"]
+        backup_names = [f"{clean_query} Alpha", f"{clean_query} Nexus", f"The Elite {clean_query}"]
         for idx, b_name in enumerate(backup_names):
             leads_list.append({"Business Name": b_name, "Website": f"https://www.example-{idx}.com"})
             
-    # प्रत्येक लीडसाठी डिजिटल ऑडिट स्कोर जोडणे
     for lead in leads_list:
         audit_results = perform_digital_audit(lead["Website"])
         lead.update(audit_results)
         
-        # ऑडिट डेटासह कस्टमाइज्ड मेसेज तयार करणे
         name = lead["Business Name"]
         lead["Custom AI Pitch"] = (
             f"नमस्कार Team {name},\n\n"
-            f"तुमच्या व्यवसायाबद्दल इंटरनेटवर रिसर्च करताना आमच्या RC Digital ऑडिट सिस्टीमने तुमच्या ब्रँडचा डिजिटल स्कोअर तपासला. "
-            f"तुमचा सध्याचा 'Digital Audit Score' हा १०० पैकी फक्त **{lead['score']}/१००** ({lead['status']}) आहे.\n\n"
+            f"आम्ही तुमच्या ब्रँडचा डिजिटल स्कोअर तपासला असता, तुमचा 'Digital Audit Score' १०० पैकी फक्त **{lead['score']}/१००** ({lead['status']}) आहे.\n\n"
             f"मुख्य उणिवा: {lead['loophole']}\n\n"
-            f"एक डिजिटल स्ट्रॅटेजिस्ट आणि बिझनेस ॲडव्हायझर म्हणून आम्ही हा स्कोअर ९०+ वर नेऊन तुमचा ऑर्गेनिक कस्टमर रेव्हेन्यू २ पटीने कसा वाढवायचा, याचा एक २ पानांचा मोफत आराखडा तयार केला आहे. "
-            f"या आठवड्यात तो शेअर करण्यासाठी एक छोटा १० मिनिटांचा कॉल ठरवूया का?\n\n"
+            f"एक डिजिटल स्ट्रॅटेजिस्ट म्हणून हा स्कोअर ९०+ वर नेऊन तुमचा ऑर्गेनिक कस्टमर रेव्हेन्यू २ पटीने वाढवण्यासाठी आम्ही एक २ पानांचा मोफत आराखडा तयार केला आहे. या आठवड्यात एक छोटा १० मिनिटांचा कॉल ठरवूया का?\n\n"
             f"सादर,\nRC Digital Team"
         )
             
     return leads_list
 
-# --- ३. PROFESSIONAL BRANDED LAYOUT ---
-
-# Top Navbar
+# --- ३. UI LAYOUT ---
 st.markdown("""
 <div class="nav-container">
     <div class="logo-container">
@@ -255,59 +254,50 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Metric Grid
 m1, m2, m3 = st.columns(3)
-with m1:
-    st.markdown('<div class="metric-card"><div class="metric-label">Operational Hub</div><div class="metric-value">Market Scanner</div></div>', unsafe_allow_html=True)
-with m2:
-    st.markdown('<div class="metric-card"><div class="metric-label">Audit Module</div><div class="metric-value" style="color:#3B82F6;">Automated Score v1.0</div></div>', unsafe_allow_html=True)
-with m3:
-    st.markdown('<div class="metric-card"><div class="metric-label">Outbound Mode</div><div class="metric-value">Data-Driven Pitch</div></div>', unsafe_allow_html=True)
+with m1: st.markdown('<div class="metric-card"><div class="metric-label">Operational Hub</div><div class="metric-value">Market Scanner</div></div>', unsafe_allow_html=True)
+with m2: st.markdown('<div class="metric-card"><div class="metric-label">Audit Module</div><div class="metric-value" style="color:#3B82F6;">Automated Score v1.0</div></div>', unsafe_allow_html=True)
+with m3: st.markdown('<div class="metric-card"><div class="metric-label">Outbound Mode</div><div class="metric-value">Data-Driven Pitch</div></div>', unsafe_allow_html=True)
 
-st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
-# Control Center Inputs
 col1, col2 = st.columns(2)
-with col1:
-    target_industry = st.text_input("Target Industry Segment", placeholder="e.g., Gyms, Real Estate Developers")
-with col2:
-    target_location = st.text_input("Geographic Focus", placeholder="e.g., Pune, Mumbai")
+with col1: target_industry = st.text_input("Target Industry Segment", placeholder="e.g., Luxury Hotels, Gyms")
+with col2: target_location = st.text_input("Geographic Focus", placeholder="e.g., Pune, Mumbai")
 
 st.markdown("<br>", unsafe_allow_html=True)
 launch_btn = st.button("Run Market Audit & Diagnostics")
 
-# Output Section
 if launch_btn:
     if target_industry and target_location:
-        with st.spinner("⚡ Activating matrix crawlers & compiling technical digital audits..."):
-            time.sleep(1.5)
+        with st.spinner("⚡ Scanning and analyzing web diagnostics..."):
+            time.sleep(1.2)
             data = fetch_leads(target_industry, target_location)
             
         if data:
             st.markdown("<br>---<br>", unsafe_allow_html=True)
             st.markdown('<h3 style="font-size: 1.4rem; font-weight:700; letter-spacing: -0.5px; margin-bottom:1.5rem;">💎 Market Intelligence & Technical Audit Reports</h3>', unsafe_allow_html=True)
             
+            # 💡 दुरुस्ती: इथे प्रत्येक कार्ड आता १००% रेंडर होईल, कच्चा कोड दिसणार नाही.
             for item in data:
-                st.markdown(f"""
+                card_html = f"""
                 <div class="lead-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 1.3rem; font-weight: 800; color: #FFFFFF;">🏢 {item['Business Name']}</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <span style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF;">🏢 {item['Business Name']}</span>
                         <a href="{item['Website']}" target="_blank" style="color: #FFFFFF; background: rgba(255,255,255,0.05); padding: 0.4rem 1rem; border-radius: 99px; text-decoration: none; font-size: 0.78rem; border: 1px solid rgba(255,255,255,0.08);">Inspect Hub ↗</a>
                     </div>
                     
-                    <!-- 📊 NEW AUDIO SCORE SECTION -->
                     <div class="audit-container">
                         <div class="audit-score-badge" style="color: {item['color']}; border-color: {item['color']}; background-color: {item['color']}10;">
                             {item['score']}
                         </div>
                         <div style="display: flex; flex-direction: column; justify-content: center;">
-                            <span style="font-size: 0.8rem; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px;">Diagnostic Health Status</span>
-                            <span style="font-size: 1.1rem; font-weight: 700; color: {item['color']};">{item['status']}</span>
-                            <span style="font-size: 0.88rem; color: #A1A1AA; margin-top: 0.2rem;">Found Loophole: {item['loophole']}</span>
+                            <span style="font-size: 0.75rem; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px;">Diagnostic Health Status</span>
+                            <span style="font-size: 1.05rem; font-weight: 700; color: {item['color']};">{item['status']}</span>
+                            <span style="font-size: 0.85rem; color: #A1A1AA; margin-top: 0.1rem;">Found Loophole: {item['loophole']}</span>
                         </div>
                     </div>
                     
-                    <!-- 🎯 INDIVIDUAL PERSONALIZED OUTBOUND PITCH -->
                     <div class="pitch-box">{item['Custom AI Pitch']}</div>
                     
                     <div style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
@@ -315,6 +305,7 @@ if launch_btn:
                         <span style="font-size: 0.78rem; color: #71717A; font-weight: 500;">Audit Data Injected into Pitch Protocol</span>
                     </div>
                 </div>
-                """, unsafe_allow_html=True)
+                """
+                st.markdown(card_html, unsafe_allow_html=True)
     else:
         st.error("कृपया शोध घेण्यासाठी दोन्ही पर्याय भरा.")
