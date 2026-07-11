@@ -4,134 +4,157 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
-# --- १. ULTRA-PREMIUM SAAS DASHBOARD UI/UX (CSS) ---
-st.set_page_config(page_title="RC Digital | Growth Engine", page_icon="⚡", layout="wide")
+# --- १. ADVANCED ANIMATED GLASSMORPHIC UI (CSS) ---
+st.set_page_config(page_title="RC Digital | Next-Gen Engine", page_icon="✨", layout="wide")
 
 st.markdown("""
     <style>
-    /* Google Fonts वरून Inter आणि Plus Jakarta Sans फॉन्ट लोड करणे */
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
     
+    /* मुख्य बॅकग्राउंड - अतिशय डीप डार्क */
     .stApp {
-        background-color: #09090B;
-        color: #FAFAFA;
+        background-color: #030303;
+        color: #F4F4F5;
         font-family: 'Inter', sans-serif;
     }
     
-    /* मुख्य फॉन्ट आणि टायपोग्राफी */
     h1, h2, h3 {
         font-family: 'Plus Jakarta Sans', sans-serif !important;
     }
     
-    /* प्रीमियम नेव्हिगेशन बार सारखा लुक */
+    /* १. FADE-IN ANIMATION KEYFRAMES */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes pulseGlow {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3); }
+        70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+    }
+
+    /* २. PREMIUM TOP GLASS HEADER WITH ANIMATION */
     .nav-container {
+        animation: fadeInUp 0.6s ease-out;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 1.2rem 2rem;
-        background-color: #141417;
-        border-bottom: 1px solid #27272A;
-        border-radius: 12px;
+        padding: 1.5rem 2rem;
+        background: rgba(20, 20, 23, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
         margin-bottom: 2rem;
     }
+    
     .brand-title {
-        font-size: 1.6rem;
+        font-size: 1.8rem;
         font-weight: 800;
-        letter-spacing: -0.5px;
-        background: linear-gradient(90deg, #FFFFFF 0%, #A1A1AA 100%);
+        letter-spacing: -1px;
+        background: linear-gradient(90deg, #FFFFFF 0%, #71717A 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
-    .badge {
-        background-color: #27272A;
-        color: #E4E4E7;
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        border: 1px solid #3F3F46;
-    }
     
-    /* मॅट्रिक्स / स्टॅटिस्टिक्स कार्ड्स */
+    /* Pulsing Active State Dot */
+    .pulse-dot {
+        width: 10px;
+        height: 10px;
+        background-color: #10B981;
+        border-radius: 50%;
+        display: inline-block;
+        animation: pulseGlow 2s infinite;
+        margin-right: 8px;
+    }
+
+    /* ३. CARD METRICS WITH GRADIENT BORDERS */
     .metric-card {
-        background-color: #141417;
-        border: 1px solid #27272A;
-        padding: 1.2rem;
-        border-radius: 12px;
-        text-align: left;
+        animation: fadeInUp 0.8s ease-out;
+        background: rgba(20, 20, 23, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        padding: 1.5rem;
+        border-radius: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .metric-card:hover {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.02);
+        transform: translateY(-2px);
     }
     .metric-label {
-        color: #71717A;
-        font-size: 0.8rem;
+        color: #A1A1AA;
+        font-size: 0.75rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
     .metric-value {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
         font-weight: 700;
         color: #FFFFFF;
-        margin-top: 0.2rem;
+        margin-top: 0.4rem;
     }
-    
-    /* क्युरेटेड इनपुट पॅनेल */
-    .input-section {
-        background-color: #141417;
-        border: 1px solid #27272A;
-        padding: 2rem;
-        border-radius: 14px;
-        margin-bottom: 2rem;
-    }
-    
-    /* बटनांची अद्ययावत प्रो स्टाईल */
+
+    /* ४. ULTRA MODERN BUTTON DESIGN WITH GLOW */
     div.stButton > button:first-child {
-        background: linear-gradient(180deg, #FFFFFF 0%, #E4E4E7 100%);
-        color: #09090B;
-        border-radius: 8px;
+        background: #FFFFFF;
+        color: #000000;
+        border-radius: 99px; /* Capsule Shape */
         border: none;
-        padding: 0.7rem 2.5rem;
+        padding: 0.8rem 3rem;
         font-weight: 600;
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 0.95rem;
-        box-shadow: 0 4px 12px rgba(255,255,255,0.05);
-        transition: all 0.2s ease;
+        font-size: 1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         width: 100%;
+        letter-spacing: 0.5px;
     }
     div.stButton > button:first-child:hover {
-        background: #FFFFFF;
-        box-shadow: 0 4px 20px rgba(255,255,255,0.15);
-        transform: translateY(-1px);
+        background: #F4F4F5;
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+        transform: scale(1.01);
     }
-    
-    /* आउटपुट रिझल्ट कार्ड्स (UX Improvement) */
+
+    /* ५. HIGH-END RESULT CARDS (WITH SLIDE-UP ANIMATION) */
     .lead-card {
-        background: linear-gradient(145deg, #141417 0%, #101012 100%);
-        padding: 1.8rem;
-        border-radius: 14px;
-        border: 1px solid #27272A;
+        animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        background: linear-gradient(180deg, rgba(24, 24, 27, 0.8) 0%, rgba(12, 12, 14, 0.8) 100%);
+        backdrop-filter: blur(8px);
+        padding: 2rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
         margin-bottom: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        transition: border 0.3s ease;
+        transition: all 0.4s ease;
     }
     .lead-card:hover {
-        border: 1px solid #3F3F46;
+        border-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        transform: translateY(-4px); /* Hover Animation */
     }
+    
     .pitch-box {
-        margin-top: 1rem;
+        margin-top: 1.2rem;
         white-space: pre-wrap;
-        color: #E4E4E7;
-        font-size: 0.92rem;
-        line-height: 1.6;
-        background-color: #09090B;
-        padding: 1.2rem;
-        border-radius: 8px;
-        border: 1px solid #222226;
+        color: #D4D4D8;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        background-color: rgba(0, 0, 0, 0.4);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.03);
     }
     </style>
 """, unsafe_allow_html=True)
 
-# --- २. कोर इंजिन लॉजिक ---
+# --- २. बॅकएंड लॉजिक ---
 def fetch_leads(query, location):
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+    headers = {"User-Agent": "Mozilla/5.0"}
     search_url = f"https://html.duckduckgo.com/html/?q={query}+in+{location}"
     leads_list = []
     
@@ -162,71 +185,68 @@ def fetch_leads(query, location):
             
     return leads_list
 
-# --- ३. PROFESSIONAL UI LAYOUT ---
+# --- ३. FUTURISTIC UI LAYOUT ---
 
-# Top Header Navbar
+# Top Navbar with Live Pulsing Dot
 st.markdown("""
 <div class="nav-container">
     <div class="brand-title">RC DIGITAL</div>
-    <div class="badge">⚡ Autonomous Growth Engine v2.0</div>
+    <div style="display: flex; align-items: center;">
+        <span class="pulse-dot"></span>
+        <span style="font-size: 0.85rem; color: #10B981; font-weight: 600; letter-spacing: 0.5px;">SYSTEM ONLINE</span>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
-# Metrics Grid (Dashboard Feel)
-m1, m2, m3, m4 = st.columns(4)
+# Metric Grid
+m1, m2, m3 = st.columns(3)
 with m1:
-    st.markdown('<div class="metric-card"><div class="metric-label">Engine Status</div><div class="metric-value" style="color: #10B981;">Active</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="metric-card"><div class="metric-label">Operational Mode</div><div class="metric-value">Autonomous AI</div></div>', unsafe_allow_html=True)
 with m2:
-    st.markdown('<div class="metric-card"><div class="metric-label">Target Channels</div><div class="metric-value">B2B Email</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="metric-card"><div class="metric-label">Distribution Layer</div><div class="metric-value">Smart Outreach</div></div>', unsafe_allow_html=True)
 with m3:
-    st.markdown('<div class="metric-card"><div class="metric-label">AI Model</div><div class="metric-value">GPT-4o Custom</div></div>', unsafe_allow_html=True)
-with m4:
-    st.markdown('<div class="metric-card"><div class="metric-label">Avg. Conversion</div><div class="metric-value">84%</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="metric-card"><div class="metric-label">Visual Architecture</div><div class="metric-value">Glassmorphic v3</div></div>', unsafe_allow_html=True)
+
+st.markdown("<br><br>", unsafe_allow_html=True)
+
+# Control Inputs
+col1, col2 = st.columns(2)
+with col1:
+    target_industry = st.text_input("Target Core Industry", placeholder="e.g., Real Estate, Design Studios")
+with col2:
+    target_location = st.text_input("Geographic Focus Location", placeholder="e.g., Mumbai, Pune")
 
 st.markdown("<br>", unsafe_allow_html=True)
+launch_btn = st.button("Initialize Growth Engine")
 
-# Main Form Control Panel
-st.markdown('<h3 style="font-size: 1.2rem; color: #A1A1AA; font-weight: 500; margin-bottom: 0.8rem;">Target Parameters</h3>', unsafe_allow_html=True)
-
-with st.container():
-    col1, col2 = st.columns(2)
-    with col1:
-        target_industry = st.text_input("Industry Segment", placeholder="e.g., Luxury Hotels, Real Estate")
-    with col2:
-        target_location = st.text_input("Geographic Focus", placeholder="e.g., Mumbai, Pune")
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    launch_btn = st.button("Execute Lead Acquisition")
-
-# Action Execution & Data Visualization
+# Result Display with Animations
 if launch_btn:
     if target_industry and target_location:
-        with st.spinner("⚡ Initializing market grid scan & crafting high-end pitches..."):
-            time.sleep(1.2)
+        with st.spinner("✨ Fluid AI matrix scanning active..."):
+            time.sleep(1.5) # नॅचरल अॅनिमेटेड गॅप
             data = fetch_leads(target_industry, target_location)
             
         if data:
-            st.markdown("---")
-            st.markdown(f'<h3 style="font-size: 1.4rem; font-weight:700;">📊 Market Intelligence & Outbound Assets</h3>', unsafe_allow_html=True)
+            st.markdown("<br>---<br>", unsafe_allow_html=True)
+            st.markdown('<h3 style="font-size: 1.5rem; font-weight:700; letter-spacing: -0.5px; margin-bottom:1.5rem;">💎 Curated Intelligence & Creative Assets</h3>', unsafe_allow_html=True)
             
-            # Data Table (Pristine UX)
+            # Premium Table View
             df = pd.DataFrame(data)
             st.dataframe(df[["Business Name", "Website"]], use_container_width=True)
-            
             st.markdown("<br>", unsafe_allow_html=True)
             
-            # Premium Cards Rendering
+            # Animated Cards Rendering
             for item in data:
                 st.markdown(f"""
                 <div class="lead-card">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 1.2rem; font-weight: 700; color: #FFFFFF;">🏢 {item['Business Name']}</span>
-                        <a href="{item['Website']}" target="_blank" style="color: #FAFAFA; background-color: #27272A; padding: 0.3rem 0.8rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; border: 1px solid #3F3F46;">Analyze Source ↗</a>
+                        <span style="font-size: 1.25rem; font-weight: 700; color: #FFFFFF;">🏢 {item['Business Name']}</span>
+                        <a href="{item['Website']}" target="_blank" style="color: #FFFFFF; background: rgba(255,255,255,0.05); padding: 0.4rem 1rem; border-radius: 99px; text-decoration: none; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s;">Inspect ↗</a>
                     </div>
                     <div class="pitch-box">{item['Custom AI Pitch']}</div>
-                    <div style="margin-top: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="width: 8px; height: 8px; background-color: #10B981; border-radius: 50%; display: inline-block;"></span>
-                        <span style="font-size: 0.8rem; color: #A1A1AA; font-weight: 500;">Outbound Strategy Formulated</span>
+                    <div style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="width: 6px; height: 6px; background-color: #3B82F6; border-radius: 50%; display: inline-block;"></span>
+                        <span style="font-size: 0.78rem; color: #71717A; font-weight: 500;">Hyper-Personalization Token Generated</span>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
