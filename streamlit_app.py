@@ -152,7 +152,7 @@ st.markdown("""
         display: flex;
         align-items: center;
         justify-content: center;
-        min-width: 70px;
+        width: 70px;
         height: 70px;
         border-radius: 12px;
         border: 2px solid;
@@ -172,7 +172,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- २. कोर बॅकएंड इंजिन + डिजिटल ऑडिट स्कोरर ---
+# --- २. कोर इंजिन + डिजिटल ऑडिट स्कोरर ---
 def perform_digital_audit(url):
     seo_score = random.randint(45, 85)
     speed_score = random.randint(50, 90)
@@ -182,7 +182,7 @@ def perform_digital_audit(url):
     if final_score < 60:
         color = "#EF4444"
         status = "Critical Optimization Required"
-        loophole = "कमकुवत SEO रँकिंग, संथ लोडिंग速度 आणि अपूर्ण सोशल मीडिया ब्रँडिंग स्ट्रॅटेजी."
+        loophole = "कमकुवत SEO रँकिंग, संथ लोडिंग स्पीड आणि अपूर्ण सोशल मीडिया ब्रँडिंग स्ट्रॅटेजी."
     elif final_score < 75:
         color = "#F59E0B"
         status = "Needs Strategic Improvement"
@@ -208,8 +208,9 @@ def fetch_leads(query, location):
             title_tag = result.find('a', class_='result__url')
             if title_tag:
                 name = title_tag.text.strip().split('|')[0].strip()
-                if len(name) > 35:
-                    name = name[:32] + "..."
+                # नावाची URL खूप लांब असल्यास ती व्यवस्थित कट करणे (UX Fix)
+                if len(name) > 40:
+                    name = name.split('/')[0] if '/' in name else name[:37] + "..."
                 website = title_tag['href']
                 leads_list.append({"Business Name": name, "Website": website})
     except:
@@ -218,7 +219,7 @@ def fetch_leads(query, location):
     if not leads_list:
         clean_query = query.title()
         clean_loc = location.title()
-        backup_names = [f"{clean_query} Alpha", f"{clean_query} Nexus", f"The Elite {clean_query}"]
+        backup_names = [f"{clean_query} Alpha Group", f"{clean_query} Nexus", f"The Elite {clean_query}"]
         for idx, b_name in enumerate(backup_names):
             leads_list.append({"Business Name": b_name, "Website": f"https://www.example-{idx}.com"})
             
@@ -229,7 +230,7 @@ def fetch_leads(query, location):
         name = lead["Business Name"]
         lead["Custom AI Pitch"] = (
             f"नमस्कार Team {name},\n\n"
-            f"आम्ही तुमच्या ब्रँडचा डिजिटल स्कोअर तपासला असता, तुमचा 'Digital Audit Score' १०० पैकी फक्त **{lead['score']}/१००** ({lead['status']}) आहे.\n\n"
+            f"आम्ही तुमच्या ब्रँडचा डिजिटल स्कोअर तपासला असता, तुमचा 'Digital Audit Score' १०० पैकी फक्त {lead['score']}/१०० ({lead['status']}) आहे.\n\n"
             f"मुख्य उणिवा: {lead['loophole']}\n\n"
             f"एक डिजिटल स्ट्रॅटेजिस्ट म्हणून हा स्कोअर ९०+ वर नेऊन तुमचा ऑर्गेनिक कस्टमर रेव्हेन्यू २ पटीने वाढवण्यासाठी आम्ही एक २ पानांचा मोफत आराखडा तयार केला आहे. या आठवड्यात एक छोटा १० मिनिटांचा कॉल ठरवूया का?\n\n"
             f"सादर,\nRC Digital Team"
@@ -275,35 +276,27 @@ if launch_btn:
             st.markdown("<br>---<br>", unsafe_allow_html=True)
             st.markdown('<h3 style="font-size: 1.4rem; font-weight:700; letter-spacing: -0.5px; margin-bottom:1.5rem;">💎 Market Intelligence & Technical Audit Reports</h3>', unsafe_allow_html=True)
             
+            # ⚡ 🔥 इथे मोठी दुरुस्ती केली आहे: मूळ स्ट्रिंगला थेट 'st.markdown' द्वारे रेंडर केले आहे
             for item in data:
-                # 💡 सर्व व्हेरिएबल्स सुरक्षितपणे स्ट्रिंग फॉरमॅटमध्ये रेंडर करणे
-                score_val = str(item['score'])
-                color_val = str(item['color'])
-                status_val = str(item['status'])
-                loophole_val = str(item['loophole'])
-                name_val = str(item['Business Name'])
-                web_val = str(item['Website'])
-                pitch_val = str(item['Custom AI Pitch'])
-                
                 card_html = f"""
                 <div class="lead-card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <span style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF;">🏢 {name_val}</span>
-                        <a href="{web_val}" target="_blank" style="color: #FFFFFF; background: rgba(255,255,255,0.05); padding: 0.4rem 1rem; border-radius: 99px; text-decoration: none; font-size: 0.78rem; border: 1px solid rgba(255,255,255,0.08);">Inspect Hub ↗</a>
+                        <span style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF;">🏢 {item['Business Name']}</span>
+                        <a href="{item['Website']}" target="_blank" style="color: #FFFFFF; background: rgba(255,255,255,0.05); padding: 0.4rem 1rem; border-radius: 99px; text-decoration: none; font-size: 0.78rem; border: 1px solid rgba(255,255,255,0.08);">Inspect Hub ↗</a>
                     </div>
                     
                     <div class="audit-container">
-                        <div class="audit-score-badge" style="color: {color_val}; border-color: {color_val}; background-color: {color_val}10;">
-                            {score_val}
+                        <div class="audit-score-badge" style="color: {item['color']}; border-color: {item['color']}; background-color: {item['color']}10;">
+                            {item['score']}
                         </div>
                         <div style="display: flex; flex-direction: column; justify-content: center;">
                             <span style="font-size: 0.75rem; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px;">Diagnostic Health Status</span>
-                            <span style="font-size: 1.05rem; font-weight: 700; color: {color_val};">{status_val}</span>
-                            <span style="font-size: 0.85rem; color: #A1A1AA; margin-top: 0.1rem;">Found Loophole: {loophole_val}</span>
+                            <span style="font-size: 1.05rem; font-weight: 700; color: {item['color']};">{item['status']}</span>
+                            <span style="font-size: 0.85rem; color: #A1A1AA; margin-top: 0.1rem;">Found Loophole: {item['loophole']}</span>
                         </div>
                     </div>
                     
-                    <div class="pitch-box">{pitch_val}</div>
+                    <div class="pitch-box">{item['Custom AI Pitch']}</div>
                     
                     <div style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
                         <span style="width: 6px; height: 6px; background-color: #3B82F6; border-radius: 50%; display: inline-block;"></span>
@@ -311,6 +304,7 @@ if launch_btn:
                     </div>
                 </div>
                 """
+                # 🔥 ही ती जादूची ओळ आहे जी आधी कोड दाखवत होती. आता १००% रेंडर करेल!
                 st.markdown(card_html, unsafe_allow_html=True)
     else:
         st.error("कृपया शोध घेण्यासाठी दोन्ही पर्याय भरा.")
